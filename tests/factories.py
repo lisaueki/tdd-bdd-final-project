@@ -57,6 +57,5 @@ class ProductFactory(factory.Factory):
             Category.HOUSEWARES,
             Category.AUTOMOTIVE,
             Category.TOOLS,
-        ]
-    )
-   ## Add code to create Fake Products 
+        ])
+    # Add code to create Fake Products
