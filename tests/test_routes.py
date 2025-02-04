@@ -199,7 +199,7 @@ class TestProductRoutes(TestCase):
         # assign the first product from the products list to the variable test_product
         test_product = products[0]
         # send a self.client.delete() request to the BASE_URL with test_product.id
-        response = self.client.deleate(f"{BASE_URL}/{test_product.id}")
+        response = self.client.delete(f"{BASE_URL}/{test_product.id}")
         # assert that the resp.status_code is status.HTTP_204_NO_CONTENT
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         # check if the response data is empty 
@@ -231,7 +231,7 @@ class TestProductRoutes(TestCase):
         # extract the name of the first product in the products list and assigns it to the variable test_name
         test_name = products[0].name
         # count the number of products in the products list that have the same name as the test_name
-        name_count = len([product.name for product in products if product.name == testname])
+        name_count = len([product.name for product in products if product.name == test_name])
         # send an HTTP GET request to the URL specified by the BASE_URL variable, along with a query parameter "name"
         response = self.client.get(
             BASE_URL, query_string=f"name={quote_plus(test_name)}"
@@ -267,9 +267,8 @@ class TestProductRoutes(TestCase):
         # assert that the length of the data list (i.e., the number of products returned in the response) is equal to found_count
         self.assertEqual(len(data), found_count)
         # use a for loop to check each product in the data list and verify that all returned products belong to the queried category
-        for product in products:
+        for product in data:
             self.assertEqual(product["category"], category.name)
-
 
     def test_query_by_availability(self):
         """It should Query Products by availability"""

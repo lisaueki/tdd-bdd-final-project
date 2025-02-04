@@ -23,6 +23,7 @@ from flask import url_for  # noqa: F401 pylint: disable=unused-import
 from service.models import Product
 from service.common import status  # HTTP Status Codes
 from . import app
+from service.models import Product, Category
 
 
 ######################################################################
@@ -93,26 +94,6 @@ def create_products():
     location_url = "/"  # delete once READ is implemented
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
-
-######################################################################
-# L I S T   A L L   P R O D U C T S
-######################################################################
-
-@app.route("/products", methods=["GET"])
-def list_products():
-    """Returns a list of Products"""
-    app.logger.info("Request to list Products...")
-    # use the Product.all() method to retrieve all products
-    products = Product.all()
-    # create a list of serialize() products
-    results = [product.serialize() for product in products]
-    # log the number of products being returned in the list
-    app.logger.info("[%s] Products returned", len(results))
-    # return the list with a return code of status.HTTP_200_OK
-    return results, status.HTTP_200_OK
-Copied!
-
-
 ######################################################################
 # R E A D   A   P R O D U C T
 ######################################################################
@@ -154,7 +135,7 @@ def update_products(product_id):
 # D E L E T E   A   P R O D U C T
 ######################################################################
 
-@app.route("/products/<int:product_id>", methods=["DELEAT"])
+@app.route("/products/<int:product_id>", methods=["DELETE"])
 def deleate_products(product_id):
     """
     Delete a Product
@@ -165,9 +146,9 @@ def deleate_products(product_id):
     product = Product.find(product_id)
     # if found, call the delete() method on the product
     if product:
-        product.deleate()
+        product.delete()
     # return and empty body ("") with a return code of status.HTTP_204_NO_CONTENT
-    return "", status.HTTP_404_NOT_FOUND
+    return "", status.HTTP_204_NO_CONTENT
 
 ######################################################################
 # LIST PRODUCTS
@@ -202,7 +183,7 @@ def list_products():
         app.logger.info("Find all")
         products = Product.all()
 
-    results = [product.serialize for product in products]
+    results = [product.serialize() for product in products]
     app.logger.info("[%s] Products returned", len(results))
     
     return results, status.HTTP_200_OK

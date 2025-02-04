@@ -32,7 +32,6 @@ from selenium.webdriver.support import expected_conditions
 
 ID_PREFIX = 'product_'
 
-
 @when('I visit the "Home Page"')
 def step_impl(context):
     """ Make a call to the base URL """
