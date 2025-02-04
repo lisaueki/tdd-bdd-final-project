@@ -168,3 +168,41 @@ def deleate_products(product_id):
         product.deleate()
     # return and empty body ("") with a return code of status.HTTP_204_NO_CONTENT
     return "", status.HTTP_404_NOT_FOUND
+
+######################################################################
+# LIST PRODUCTS
+######################################################################
+@app.route("/products", methods=["GET"])
+def list_products():
+    """Returns a list of Products"""
+    app.logger.info("Request to list Products...")
+
+    # Initialize an empty list to hold the products.
+    products = []
+    # Get the `name` parameter from the request (hint: use `request.args.get()`
+    name = request.args.get("name")
+    category = request.args.get("category")
+    available = request.args.get("available")
+
+    # test to see if you received the "name" query parameter
+    # If you did, call the Product.find_by_name(name) method to retrieve products that match the specified name
+    if name:
+        app.logger.info("Find by name: %s", name)
+        products = Product.find_by_name(name)  
+    elif category:
+        app.logger.info("Find by category: %s", category)
+        category_value = getattr(Category, category.upper())
+        products = Product.find_by_category(category_value)
+    elif available:
+        app.logger.info("Find by available: %s", available)
+        available_value = available.lower() in ["true", "yes", "1"]
+        products = Product.find_by_availability(available_value)
+
+    else:
+        app.logger.info("Find all")
+        products = Product.all()
+
+    results = [product.serialize for product in products]
+    app.logger.info("[%s] Products returned", len(results))
+    
+    return results, status.HTTP_200_OK
